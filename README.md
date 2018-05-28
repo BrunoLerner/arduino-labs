@@ -20,3 +20,6 @@ Simple countdown
 
 ## ultrassonicWithVisor
 You have an ultrassonic sensor, and as you approaches and walks away it shows in a visor the distance
+
+## manipulador
+You have a manipulator with 6 servo motors, and we have an ultrassonic sensor. We put a candy near the robot and it gets the candy 
