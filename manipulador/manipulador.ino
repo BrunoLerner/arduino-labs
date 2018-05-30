@@ -6,24 +6,23 @@
 
 #define motorBase 9
 #define motorCotovelo 10
-#define motorGarra 12
+#define motorPunho 13
 
-#define minimumDistance 10
+#define minimumDistance 18
 
 Servo base;
 Servo cotovelo;
-Servo garra;
+Servo punho;
 Ultrasonic ultrasonic(pino_trigger, pino_echo);
-float distance;
 
 void setup() {
   base.attach(motorBase);
   cotovelo.attach(motorCotovelo);
-  garra.attach(motorGarra);
+  punho.attach(motorPunho);
   
-  base.write(45);
-  cotovelo.write(90);
-  garra.write(60);
+  base.write(60);
+  cotovelo.write(0);
+  punho.write(0);
   
   Serial.begin(9600);
 }
@@ -42,25 +41,13 @@ void slowSpin(Servo servo, int initialAngle, int finalAngle){
   }
 }
 
-void getCandy(){
-  base.write(90);
-  garra.write(0);
+void dropWater(){
+  slowSpin(base, 60, 0);
   delay(1000);
-  slowSpin(cotovelo, 90, 0);
-  delay(200);
-  garra.write(30);
-  delay(200);
-  slowSpin(cotovelo, 0, 90);
-  delay(100);
-  base.write(0);
-  delay(100);
-  slowSpin(cotovelo, 90, 0);
-  delay(100);
-  garra.write(0);
-  delay(100);
-  base.write(45);
-  cotovelo.write(90);
-  garra.write(60);
+  slowSpin(punho, 0, 70);
+  delay(6000);
+  slowSpin(punho, 70, 0);
+  slowSpin(base, 0, 60);
 }
 
 float readDistance(){
@@ -68,15 +55,15 @@ float readDistance(){
   long microsec = ultrasonic.timing();
   cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);
   //Exibe informacoes no serial monitor
-  Serial.print("Distancia em cm: ");
-  Serial.print(cmMsec);
+  Serial.println("Distancia em cm: ");
+  Serial.println(cmMsec);
   return cmMsec;
 }
 
 
 void loop() {
-  if (distance < minimumDistance) {
-      getCandy();
+  if (readDistance() < minimumDistance) {
+      dropWater();
   }
-  delay(300);   
+  delay(500);
 }
